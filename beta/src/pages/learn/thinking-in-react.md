@@ -1,18 +1,18 @@
 ---
-title: Thinking in React
+title: 用 React 思考
 ---
 
 <Intro>
 
-React can change how you think about the designs you look at and the apps you build. Where once you might have seen a forest, after working with React, you will appreciate the individual trees. React makes it easier to think in design systems and UI states. In this tutorial, we'll guide you through the thought process of building a searchable product data table with React.
+React 可以改變你對你所看到的設計和建立的應用程式的思考方式。以前你可能看到的是一片森林，在使用 React 之後，你會欣賞每一個樹木。React 使在設計系統和 UI 狀態中的思考變得更容易。在這份教學中，我們會帶領你走過一遍用 React 來建立一個可搜尋的產品資料表格的思考過程。
 
 </Intro>
 
-## Start with the mockup {/*start-with-the-mockup*/}
+## 從視覺稿開始 {/*start-with-the-mockup*/}
 
-Imagine that you already have a JSON API and a mockup from a designer.
+想像一下我們已經有個 JSON API 和一個設計師給我們的產品視覺稿。
 
-The JSON API returns some data that looks like this:
+JSON API 則會回傳一些看起來像這樣的資料：
 
 ```json
 [
@@ -25,25 +25,25 @@ The JSON API returns some data that looks like this:
 ]
 ```
 
-The mockup looks like this:
+這個視覺稿看起來像這樣：
 
 <img src="/images/docs/s_thinking-in-react_ui.png" width="300" style={{margin: '0 auto'}} />
 
-To implement a UI in React, you will usually follow the same five steps.
+要在 React 內實作一個 UI，你通常會遵循同樣的五個步驟。
 
-## Step 1: Break the UI into a component hierarchy {/*step-1-break-the-ui-into-a-component-hierarchy*/}
+## 第一步：將 UI 拆解成 component 層級 {/*step-1-break-the-ui-into-a-component-hierarchy*/}
 
-Start by drawing boxes around every component and subcomponent in the mockup and naming them. If you work with a designer, they may have already named these components in their design tool. Check in with them!
+首先，你要做的是將視覺稿中每一個 component 和 subcomponent 都圈起來，並且幫它們命名。如果你是跟設計師合作的話，他們可能已經透過設計工具幫你做好這一步了，所以跟他們聊聊吧！
 
-Depending on your background, you can think about splitting up a design into components in different ways:
+根據你的背景，你可以考慮以不同的方式將設計拆分為 component：
 
-* **Programming**--use the same techniques for deciding if you should create a new function or object. One such technique is the [single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle), that is, a component should ideally only do one thing. If it ends up growing, it should be decomposed into smaller subcomponents. 
-* **CSS**--consider what you would make class selectors for. (However, components are a bit less granular.)
-* **Design**--consider how you would organize the design's layers.
+* **Programming**--使用同樣的技術來決定是否要建立一個 function 或 object。其中一項技術是[單一職責原則](https://en.wikipedia.org/wiki/Single_responsibility_principle)，那就是一個 component 理想上只做一件事。如果它最終成長，那它應該被分解成更小的 subcomponent。
+* **CSS**--考慮你會為什麼製作 class selector。（但是，component 的粒度要小一些。）
+* **Design**--考慮你想怎麼組織你的設計的圖層。
 
-If your JSON is well-structured, you'll often find that it naturally maps to the component structure of your UI. That's because UI and data models often have the same information architecture--that is, the same shape. Separate your UI into components, where each component matches one piece of your data model.
+如果你的 JSON 結構是良好的，你會經常發現它自然的映射到你的 UI component 結構。這是因為 UI 和資料模型通常具有一樣的資訊架構--也就是相同的形狀。將你的 UI 拆分成 component，每個 component 都可以與你一部分資料模型做匹配。
 
-There are five components on this screen:
+在這個畫面上有五個 component 組成：
 
 <FullWidth>
 
@@ -51,19 +51,19 @@ There are five components on this screen:
 
 <img src="/images/docs/s_thinking-in-react_ui_outline.png" width="500" style={{margin: '0 auto'}} />
 
-1. `FilterableProductTable` (grey) contains the entire app.
-2. `SearchBar` (blue) receives the user input.
-3. `ProductTable` (lavender) displays and filters the list according to the user input.
-4. `ProductCategoryRow` (green) displays a heading for each category.
-5. `ProductRow`	(yellow) displays a row for each product.
+1. `FilterableProductTable` (grey) 包含整個應用程式。
+2. `SearchBar`（blue）接收使用者的輸入。
+3. `ProductTable`（lavender）根據使用者的輸入顯示和過濾列表。
+4. `ProductCategoryRow`（green）為每個類別顯示標題。
+5. `ProductRow`（yellow）為每個產品顯示一行。
 
 </CodeDiagram>
 
 </FullWidth>
 
-If you look at `ProductTable` (lavender), you'll see that the table header (containing the "Name" and "Price" labels) isn't its own component. This is a matter of preference, and you could go either way. For this example, it is a part of `ProductTable` because it appears inside the `ProductTable`'s list. However, if this header grows to be complex (e.g., if you add sorting), it would make sense to make this its own `ProductTableHeader` component.
+如果你看到 `ProductTable`（lavender），會發現表格的標題列（內含「Name」和「Price」標籤 ）並非獨立的 component。要不要把它們變成 component 這個議題完全是個人的喜好，正反意見都有。對於這個範例，它是 `ProductTable` 的一部份，因為它出現在 `ProductTable` 的列表內。然而，如果這個標題變得更複雜的話（例如，加入排序功能），那麼建立一個 `ProductTableHeader` component 是非常合理的。
 
-Now that you've identified the components in the mockup, arrange them into a hierarchy. Components that appear within another component in the mockup should appear as a child in the hierarchy:
+既然我們已經找出視覺稿中的 component 了，讓我們來安排它們的層級。在視覺稿中，在另一個 component 中出現的 component 就應該是 child：
 
 * `FilterableProductTable`
     * `SearchBar`
@@ -71,13 +71,12 @@ Now that you've identified the components in the mockup, arrange them into a hie
         * `ProductCategoryRow`
         * `ProductRow`
 
-## Step 2: Build a static version in React {/*step-2-build-a-static-version-in-react*/}
+## 第二步：在 React 中建立一個靜態版本 {/*step-2-build-a-static-version-in-react*/}
 
-Now that you have your component hierarchy, it's time to implement your app. The most straightforward approach is to build a version that renders the UI from your data model without adding any interactivity... yet! It's often easier to build the static version first and then add interactivity separately. Building a static version requires a lot of typing and no thinking, but adding interactivity requires a lot of thinking and not a lot of typing.
+現在你已經有了 component 的層級，是時候來實作你的應用程式了。最簡單的方式是為你的應用程式建立一個接收資料模型、render UI 且沒有互動性的版本...！通常先建立靜態版本然後再單獨加上互動性通常更加容易。建立一個靜態版本需要打很多字，但不需要想很多，而加上互動性則相反，需要做很多的思考，很少的打字。
 
-To build a static version of your app that renders your data model, you'll want to build [components](/learn/your-first-component) that reuse other components and pass data using [props](/learn/passing-props-to-a-component). Props are a way of passing data from parent to child. (If you're familiar with the concept of [state](/learn/state-a-components-memory), don't use state at all to build this static version. State is reserved only for interactivity, that is, data that changes over time. Since this is a static version of the app, you don't need it.)
-
-You can either build "top down" by starting with building the components higher up in the hierarchy (like `FilterableProductTable`) or "bottom up" by working from components lower down (like `ProductRow`). In simpler examples, it’s usually easier to go top-down, and on larger projects, it’s easier to go bottom-up.
+為你的應用程式建立一個 render 資料模型的版本，你會想要建立可以重複使用其他 [component](/learn/your-first-component) 的 component，並使用 [props]((/learn/passing-props-to-a-component)) 傳遞資料。Props 是將資料從 parent 傳給 child 的方式。(如果你對於 [state](/learn/state-a-components-memory) 的概念很熟悉的話，請不要使用 state 來建立靜態版本。State 是保留給互動性的，也就是會隨時間改變的資料。既然我們目前要做的是這應用程式的靜態版本，你就不需要。)
+你可以「由上而下」從高層次的 component（像是 `FilterableProductTable`）開始建構，或是「由下至上」從較低的 component（像是 `ProductRow`）開始建構。在簡單的範例中，通常由上至下較容易，而在大型專案中，由下至上會較容易。
 
 <Sandpack>
 
@@ -228,7 +227,7 @@ What's left is probably state.
 
 Let's go through them one by one again:
 
-1. The original list of products is **passed in as props, so it's not state**. 
+1. The original list of products is **passed in as props, so it's not state**.
 2. The search text seems to be state since it changes over time and can't be computed from anything.
 3. The value of the checkbox seems to be state since it changes over time and can't be computed from anything.
 4. The filtered list of products **isn't state because it can be computed** by taking the original list of products and filtering it according to the search text and value of the checkbox.
@@ -264,29 +263,29 @@ In the previous step, you found two pieces of state in this application: the sea
 Now let's run through our strategy for this state:
 
 1. **Identify components that use state:**
-    * `ProductTable` needs to filter the product list based on that state (search text and checkbox value). 
+    * `ProductTable` needs to filter the product list based on that state (search text and checkbox value).
     * `SearchBar` needs to display that state (search text and checkbox value).
 1. **Find their common parent:** The first parent component both components share is `FilterableProductTable`.
 2. **Decide where the state lives**: We'll keep the filter text and checked state values in `FilterableProductTable`.
 
-So the state values will live in `FilterableProductTable`. 
+So the state values will live in `FilterableProductTable`.
 
 Add state to the component with the [`useState()` Hook](/apis/usestate). Hooks let you "hook into" a component's [render cycle](/learn/render-and-commit). Add two state variables at the top of `FilterableProductTable` and specify the initial state of your application:
 
 ```js
 function FilterableProductTable({ products }) {
   const [filterText, setFilterText] = useState('');
-  const [inStockOnly, setInStockOnly] = useState(false);  
+  const [inStockOnly, setInStockOnly] = useState(false);
 ```
 
 Then, pass `filterText` and `inStockOnly` to `ProductTable` and `SearchBar` as props:
 
 ```js
 <div>
-  <SearchBar 
-    filterText={filterText} 
+  <SearchBar
+    filterText={filterText}
     inStockOnly={inStockOnly} />
-  <ProductTable 
+  <ProductTable
     products={products}
     filterText={filterText}
     inStockOnly={inStockOnly} />
@@ -306,10 +305,10 @@ function FilterableProductTable({ products }) {
 
   return (
     <div>
-      <SearchBar 
-        filterText={filterText} 
+      <SearchBar
+        filterText={filterText}
         inStockOnly={inStockOnly} />
-      <ProductTable 
+      <ProductTable
         products={products}
         filterText={filterText}
         inStockOnly={inStockOnly} />
@@ -387,13 +386,13 @@ function ProductTable({ products, filterText, inStockOnly }) {
 function SearchBar({ filterText, inStockOnly }) {
   return (
     <form>
-      <input 
-        type="text" 
-        value={filterText} 
+      <input
+        type="text"
+        value={filterText}
         placeholder="Search..."/>
       <label>
-        <input 
-          type="checkbox" 
+        <input
+          type="checkbox"
           checked={inStockOnly} />
         {' '}
         Only show products in stock
@@ -441,9 +440,9 @@ In the sandbox above, `ProductTable` and `SearchBar` read the `filterText` and `
 function SearchBar({ filterText, inStockOnly }) {
   return (
     <form>
-      <input 
-        type="text" 
-        value={filterText} 
+      <input
+        type="text"
+        value={filterText}
         placeholder="Search..."/>
 ```
 
@@ -452,7 +451,7 @@ Refer to the [Managing State](/learn/managing-state) to dive deeper into how Rea
 
 ## Step 5: Add inverse data flow {/*step-5-add-inverse-data-flow*/}
 
-Currently your app renders correctly with props and state flowing down the hierarchy. But to change the state according to user input, you will need to support data flowing the other way: the form components deep in the hierarchy need to update the state in `FilterableProductTable`. 
+Currently your app renders correctly with props and state flowing down the hierarchy. But to change the state according to user input, you will need to support data flowing the other way: the form components deep in the hierarchy need to update the state in `FilterableProductTable`.
 
 React makes this data flow explicit, but it requires a little more typing than two-way data binding. If you try to type or check the box in the example above, you'll see that React ignores your input. This is intentional. By writing `<input value={filterText} />`, you've set the `value` prop of the `input` to always be equal to the `filterText` state passed in from `FilterableProductTable`. Since `filterText` state is never set, the input never changes.
 
@@ -465,8 +464,8 @@ function FilterableProductTable({ products }) {
 
   return (
     <div>
-      <SearchBar 
-        filterText={filterText} 
+      <SearchBar
+        filterText={filterText}
         inStockOnly={inStockOnly}
         onFilterTextChange={setFilterText}
         onInStockOnlyChange={setInStockOnly} />
@@ -475,10 +474,10 @@ function FilterableProductTable({ products }) {
 Inside the `SearchBar`, you will add the `onChange` event handlers and set the parent state from them:
 
 ```js {5}
-<input 
-  type="text" 
-  value={filterText} 
-  placeholder="Search..." 
+<input
+  type="text"
+  value={filterText}
+  placeholder="Search..."
   onChange={(e) => onFilterTextChange(e.target.value)} />
 ```
 
@@ -495,13 +494,13 @@ function FilterableProductTable({ products }) {
 
   return (
     <div>
-      <SearchBar 
-        filterText={filterText} 
-        inStockOnly={inStockOnly} 
-        onFilterTextChange={setFilterText} 
+      <SearchBar
+        filterText={filterText}
+        inStockOnly={inStockOnly}
+        onFilterTextChange={setFilterText}
         onInStockOnlyChange={setInStockOnly} />
-      <ProductTable 
-        products={products} 
+      <ProductTable
+        products={products}
         filterText={filterText}
         inStockOnly={inStockOnly} />
     </div>
@@ -583,14 +582,14 @@ function SearchBar({
 }) {
   return (
     <form>
-      <input 
-        type="text" 
-        value={filterText} placeholder="Search..." 
+      <input
+        type="text"
+        value={filterText} placeholder="Search..."
         onChange={(e) => onFilterTextChange(e.target.value)} />
       <label>
-        <input 
-          type="checkbox" 
-          checked={inStockOnly} 
+        <input
+          type="checkbox"
+          checked={inStockOnly}
           onChange={(e) => onInStockOnlyChange(e.target.checked)} />
         {' '}
         Only show products in stock

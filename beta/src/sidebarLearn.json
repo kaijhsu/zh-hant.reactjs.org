@@ -30,10 +30,10 @@
           ]
         },
         {
-          "title": "Quick Start",
+          "title": "快速開始",
           "path": "/learn",
           "routes": [{
-            "title": "Thinking in React",
+            "title": "用 React 思考",
             "path": "/learn/thinking-in-react"
           }]
         },
