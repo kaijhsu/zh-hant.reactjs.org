@@ -194,45 +194,45 @@ td {
 
 </Sandpack>
 
-(If this code looks intimidating, go through the [Quick Start](/learn/) first!)
+（如果這些程式碼看起來很嚇人，請先看一下[快速入門]((/learn/))的內容！）
 
-After building your components, you'll have a library of reusable components that render your data model. Because this is a static app, the components will only return JSX. The component at the top of the hierarchy (`FilterableProductTable`) will take your data model as a prop. This is called _one-way data flow_ because the data flows down from the top-level component to the ones at the bottom of the tree.
+在建立你的 component 之後，你將有一個可重複使用的 component 來 render 你的資料模型。因為這是一個靜態應用程式，這些 component 將只回傳 JSX。處於層次結構頂端的 component（`FilterableProductTable`）將把你的資料模型作為一個 prop。這也稱作為_單向資料流_，因為資料從頂層的 component 流向到樹底的 component。
 
 <Gotcha>
 
-At this point, you should not be using any state values. That’s for the next step!
+在這個時間點上，你不應該使用任何 state 的值。這是為下一步準備的！
 
 </Gotcha>
 
-## Step 3: Find the minimal but complete representation of UI state {/*step-3-find-the-minimal-but-complete-representation-of-ui-state*/}
+## Step 3: 找出最少但完整的 UI State 的代表 {/*step-3-find-the-minimal-but-complete-representation-of-ui-state*/}
 
-To make the UI interactive, you need to let users change your underlying data model. You will use *state* for this.
+為了將你的 UI 變成有互動性，你需要讓使用者改變你的底層模型。為此，你將需要使用 *state*。
 
-Think of state as the minimal set of changing data that your app needs to remember. The most important principle for structuring state is to keep it [DRY (Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)). Figure out the absolute minimal representation of the state your application needs and compute everything else on-demand. For example, if you're building a shopping list, you can store the items as an array in state. If you want to also display the number of items in the list, don't store the number of items as another state value--instead, read the length of your array.
+你首先需要思考你的應用程式最少需要哪些可變的 state。結構化 state 最重要的原則是保持它 [DRY (Don't Repeat Yourself](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself))。請找出你的應用程式所需的最少的呈現方式，並按需求計算其他一切。例如，你要建立一個購物清單，你可以將這些項目作為 array 儲存到 state。如果你也想同時顯示購物清單內的數量，不要把項目數量作為另一個 state 來儲存--而是讀取 array 的長度。
 
-Now think of all of the pieces of data in this example application:
+現在思考這個範例應用程式中的所有資料：
 
-1. The original list of products
-2. The search text the user has entered
-3. The value of the checkbox
-4. The filtered list of products
+1. 原本的產品列表
+2. 使用者輸入的搜尋關鍵字
+3. Checkbox 的值
+4. 篩選過後的產品列表
 
-Which of these are state? Identify the ones that are not:
+其中哪些是 state？找出那些不是的：
 
-* Does it **remain unchanged** over time? If so, it isn't state.
-* Is it **passed in from a parent** via props? If so, it isn't state.
-* **Can you compute it** based on existing state or props in your component? If so, it *definitely* isn't state!
+* 隨著時間的推移，它是否**保持不變**？如果是，那它不是 state。
+* 它是**通過 prop 從 parent 傳來的**嗎？如果是，那它不是 state。
+* 你可以基於現有 component 內存在的 state 或 prop **計算它**嗎？如果可以，它*絕對*不是 state！
 
-What's left is probably state.
+剩下的可能是 state。
 
-Let's go through them one by one again:
+讓我們再一一的介紹一次：
 
-1. The original list of products is **passed in as props, so it's not state**.
-2. The search text seems to be state since it changes over time and can't be computed from anything.
-3. The value of the checkbox seems to be state since it changes over time and can't be computed from anything.
-4. The filtered list of products **isn't state because it can be computed** by taking the original list of products and filtering it according to the search text and value of the checkbox.
+1. 產品原始列表是**作為 prop 傳入的，所以它不是 state**。
+2. 搜尋文字似乎是 state，因為它會隨著時間變化，而且無法從任何其他地方計算出來。
+3. Checkbox 似乎是 state，因為它會隨著時間變化，而且無法從任何其他地方計算出來。
+4. 篩選過的產品列表**不是狀態**，因為它可以透過原始產品列表並根據搜尋文字和 checkbox 的值**被計算**出來的。
 
-This means only the search text and the value of the checkbox are state! Nicely done!
+這代表著只有搜尋文字和 checkbox 的值是 state！做得好！
 
 <DeepDive title="Props vs State">
 
